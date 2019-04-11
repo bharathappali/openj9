@@ -390,3 +390,9 @@ j9sysinfo_get_cache_info(struct J9PortLibrary *portLibrary, const J9CacheInfoQue
 	Trc_PRT_sysinfo_get_cache_info_exit(result);
 	return result;
 }
+
+int32_t
+j9sysinfo_get_cpu_governor_info(struct J9PortLibrary *portLibrary, struct J9CpuGovernor **governorList)
+{
+	return J9PORT_ERROR_SYSINFO_NOT_SUPPORTED;
+}

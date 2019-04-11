@@ -250,6 +250,8 @@ extern J9_CFUNC uintptr_t
 j9sysinfo_DLPAR_max_CPUs (struct J9PortLibrary *portLibrary);
 extern J9_CFUNC uintptr_t
 j9sysinfo_weak_memory_consistency (struct J9PortLibrary *portLibrary);
+extern J9_CFUNC int32_t
+j9sysinfo_get_cpu_governor_info(struct J9PortLibrary *portLibrary, struct J9CpuGovernor **governorList);
 
 /* J9SourcePort*/
 extern J9_CFUNC int32_t

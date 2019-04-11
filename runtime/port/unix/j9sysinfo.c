@@ -1676,3 +1676,96 @@ j9sysinfo_get_cache_info(struct J9PortLibrary *portLibrary, const J9CacheInfoQue
 	Trc_PRT_sysinfo_get_cache_info_exit(result);
 	return result;
 }
+
+#if defined(LINUX)
+
+#define CPU_INDEX_LENGTH 5
+
+char const *cpuGovernorPathPattern = "/sys/devices/system/cpu/cpu%d/cpufreq/scaling_governor";
+#define CPU_GOVERNOR_PATTERN_SIZE (strlen(cpuGovernorPathPattern) + (CPU_INDEX_LENGTH) + 1)
+
+static void
+addCpuToGovernorList(struct J9PortLibrary *portLibrary, struct J9CpuGovernor **governorList, int cpu, const char *governor)
+{
+	int i = 0;
+	J9CpuGovernor *governorEntry = *governorList;
+	J9CpuGovernor *prevEntry = NULL;
+
+	while (governorEntry != NULL) {
+		if (0 == strcmp(governor, governorEntry->type)) {
+			break;
+		}
+		prevEntry = governorEntry;
+		governorEntry = governorEntry->next;
+	}
+	OMRPORT_ACCESS_FROM_J9PORT(portLibrary);
+	if (governorEntry == NULL) {
+		governorEntry = omrmem_allocate_memory(sizeof(J9CpuGovernor) + strlen(governor) + 1, OMRMEM_CATEGORY_PORT_LIBRARY);
+		governorEntry->type = (char *)(governorEntry + 1);
+		strcpy(governorEntry->type, governor);
+		if (prevEntry) {
+			prevEntry->next = governorEntry;
+		}
+	}
+
+	omrsysinfo_add_cpuset(&(governorEntry->cpuSet), cpu);
+
+	if (NULL == *governorList) {
+		*governorList = governorEntry;
+	}
+}
+
+static int32_t
+getCpuGovernorDetails(struct J9PortLibrary *portLibrary, struct J9CpuGovernor **governorList, struct OMRCpuSet *cpuSet)
+{
+	OMRPORT_ACCESS_FROM_J9PORT(portLibrary);
+ 	int32_t rc = 0;
+	int32_t i = 0;
+	int32_t cpuCount = omrsysinfo_get_cpu_count(cpuSet);
+	int32_t cpuIndex = 0;
+
+	for(i = 0; i < cpuCount; i++) {
+		char pathBuffer[CPU_GOVERNOR_PATTERN_SIZE];
+		int32_t cpuGovernorPathLength = 0;
+		FILE *file = NULL; 
+		char governorName[20];
+
+		while (0 != omrsysinfo_isset_cpuset(cpuSet, cpuIndex)) {
+			cpuIndex += 1;
+		}
+
+		cpuGovernorPathLength = omrstr_printf(pathBuffer, sizeof(pathBuffer), cpuGovernorPathPattern, i);
+		if (0 == cpuGovernorPathLength) {
+			rc = J9PORT_ERROR_STRING_ILLEGAL_STRING;
+			goto _end;
+		}
+		file = fopen(pathBuffer, "r");
+		if (NULL == file) {
+			rc = J9PORT_ERROR_FILE_OPFAILED;
+			goto _end;
+		}
+		if (NULL == fgets(governorName, 20, file)) {
+			rc = J9PORT_ERROR_FILE_OPFAILED;
+		} else {
+			addCpuToGovernorList(portLibrary, governorList, cpuIndex, governorName);
+		}
+		fclose(file);
+		cpuIndex += 1;
+	}
+_end:
+	return rc;
+}
+#endif /* defined(LINUX) */
+
+int32_t
+j9sysinfo_get_cpu_governor_info(struct J9PortLibrary *portLibrary, struct J9CpuGovernor **governorList)
+{
+	int32_t rc = J9PORT_ERROR_SYSINFO_NOT_SUPPORTED;
+	struct OMRCpuSet cpuSet = {0};
+
+	OMRPORT_ACCESS_FROM_J9PORT(portLibrary);
+	omrsysinfo_get_cpu_affinity(&cpuSet);
+
+	getCpuGovernorDetails(portLibrary, governorList, &cpuSet);
+	return rc;
+}

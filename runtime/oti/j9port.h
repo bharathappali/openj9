@@ -286,6 +286,11 @@ typedef struct J9ProcessHandleStruct *J9ProcessHandle;
 
 #if defined(LINUX) && !defined(J9ZTPF)
 typedef pthread_spinlock_t spinlock_t;
+typedef struct J9CpuGovernor {
+	char *type;
+	struct OMRCpuSet cpuSet;
+	struct J9CpuGovernor *next;
+} J9CpuGovernor;
 #else /* defined(LINUX) && !defined(J9ZTPF) */
 typedef int32_t spinlock_t;
 #endif /* defined(LINUX) && !defined(J9ZTPF) */

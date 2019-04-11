@@ -5177,7 +5177,33 @@ JavaCoreDumpWriter::writeCPUinfo(void)
 	_OutputStream.writeCharacters(
 			"2CITARGETCPU   Target CPUs: ");
 	_OutputStream.writeInteger(target, "%i\n");
+#if defined(LINUX)
+	OMRPORT_ACCESS_FROM_J9PORT(_PortLibrary);
+	struct J9CpuGovernor *governorList;
+	j9sysinfo_get_cpu_governor_info(&governorList);
 
+	while (NULL != governorList) {
+		_OutputStream.writeCharacters(governorList->type);
+		_OutputStream.writeCharacters(" : ");
+		int32_t cpuCount = omrsysinfo_get_cpu_count(&(governorList->cpuSet));
+		int32_t i = 0;
+		struct OMRCpuSet *currentCpuset;
+		if (governorList->cpuSet.dynamic) {
+			currentCpuset = governorList->cpuSet.set.d_cpuset.cpuset;
+		} else {
+			currentCpuset = governorList->cpuSet.set.cpuset;
+		}
+		while (cpuCount != 0) {
+			if (omrsysinfo_isset_cpuset(currentCpuset, i) != 0) {
+				_OutputStream.writeInteger(i, "%d ");
+				cpuCount--;
+			}
+			i++;
+		}
+		_OutputStream.writeCharacters("\n");
+		governorList = governorList->next;
+	}
+#endif /* defined(LINUX) */
 	return;
 }
 

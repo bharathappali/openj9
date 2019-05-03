@@ -43,6 +43,11 @@
 #include <unistd.h>
 #endif
 
+#if defined(MUSL)
+#define __NEED_pthread_spinlock_t
+#include <bits/alltypes.h>
+#endif
+
 /**
  * @name Port library access
  * @anchor PortAccess

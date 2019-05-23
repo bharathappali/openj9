@@ -84,7 +84,7 @@ $(UMA_EXETARGET) : $(UMA_OBJECTS) $(UMA_TARGET_LIBRARIES)
   UMA_END_DASH_L = -Xlinker --end-group
 </#if>
 
-UMA_EXE_POSTFIX_FLAGS += -lm -lrt -lpthread -lc -ldl -lutil -Wl,-z,origin,-rpath,\$$ORIGIN,--disable-new-dtags,-rpath-link,$(UMA_PATH_TO_ROOT)
+UMA_EXE_POSTFIX_FLAGS += -lm -lrt -lpthread -lunwind -lexecinfo -lc -ldl -lutil -Wl,-rpath-link=/lib -Wl,-z,origin,-rpath,\$$ORIGIN,--disable-new-dtags,-rpath-link,$(UMA_PATH_TO_ROOT)
 
 <#if uma.spec.processor.amd64>
   UMA_MASM2GAS_FLAGS += --64
@@ -253,12 +253,12 @@ endif
   CXXFLAGS += -MMD
 </#if>
 
-CFLAGS += -DLINUX -DMUSL -D_REENTRANT -D_FILE_OFFSET_BITS=64
-CXXFLAGS += -DLINUX -DMUSL -D_REENTRANT -D_FILE_OFFSET_BITS=64
-CPPFLAGS += -DLINUX -DMUSL -D_REENTRANT
+CFLAGS += -DLINUX -DMUSL -Wno-stringop-truncation -D_REENTRANT -D_FILE_OFFSET_BITS=64
+CXXFLAGS += -DLINUX -DMUSL -Wno-stringop-truncation -D_REENTRANT -D_FILE_OFFSET_BITS=64
+CPPFLAGS += -DLINUX -DMUSL -Wno-stringop-truncation -D_REENTRANT
 <#if uma.spec.processor.ppc>
   ifdef USE_PPC_GCC
-    PPC_GCC_CXXFLAGS += -DLINUX -DMUSL -D_REENTRANT -D_FILE_OFFSET_BITS=64
+    PPC_GCC_CXXFLAGS += -DLINUX -DMUSL -Wno-stringop-truncation -D_REENTRANT -D_FILE_OFFSET_BITS=64
   endif
 </#if>
 

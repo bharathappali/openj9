@@ -35,7 +35,11 @@
 
 #if defined(LINUX)
 #if !defined(J9ZTPF)
+#if defined(MUSL)
+#include <signal.h>
+#else
 #include <sys/signal.h>
+#endif /* defined(MUSL) */
 #endif /* !defined(J9ZTPF) */
 #include <sys/types.h>
 #include <linux/unistd.h>

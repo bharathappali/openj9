@@ -284,11 +284,11 @@ char *getPlatformFileEncoding(JNIEnv * env, char *codepageProp, int propSize, in
 			return "EUC-JP-LINUX";
 		}
 	}
-#if defined(MUSL)
+#if defined(OMR_MUSL_CLIB)
 	codepage = nl_langinfo(CODESET);
 #else
 	codepage = nl_langinfo(_NL_CTYPE_CODESET_NAME);
-#endif /* defined(MUSL) */
+#endif /* defined(OMR_MUSL_CLIB) */
 #elif defined(ARM_EMULATED)	|| defined(CHORUS)
 	codepage = NULL;
 #elif defined(OSX)

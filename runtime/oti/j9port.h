@@ -43,9 +43,8 @@
 #include <unistd.h>
 #endif
 
-#if defined(MUSL)
-#define __NEED_pthread_spinlock_t
-#include <bits/alltypes.h>
+#if defined(OMR_MUSL_CLIB)
+#include <pthread.h>
 #endif
 
 /**

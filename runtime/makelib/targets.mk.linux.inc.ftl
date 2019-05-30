@@ -253,12 +253,12 @@ endif
   CXXFLAGS += -MMD
 </#if>
 
-CFLAGS += -DLINUX -DMUSL -Wno-stringop-truncation -Wno-stringop-overflow -D_REENTRANT -D_FILE_OFFSET_BITS=64
-CXXFLAGS += -DLINUX -DMUSL -Wno-stringop-truncation -Wno-stringop-overflow -D_REENTRANT -D_FILE_OFFSET_BITS=64
-CPPFLAGS += -DLINUX -DMUSL -Wno-stringop-truncation -Wno-stringop-overflow -D_REENTRANT
+CFLAGS += -DLINUX -DOMR_MUSL_CLIB -Wno-stringop-truncation -Wno-stringop-overflow -D_REENTRANT -D_FILE_OFFSET_BITS=64
+CXXFLAGS += -DLINUX -DOMR_MUSL_CLIB -Wno-stringop-truncation -Wno-stringop-overflow -D_REENTRANT -D_FILE_OFFSET_BITS=64
+CPPFLAGS += -DLINUX -DOMR_MUSL_CLIB -Wno-stringop-truncation -Wno-stringop-overflow -D_REENTRANT
 <#if uma.spec.processor.ppc>
   ifdef USE_PPC_GCC
-    PPC_GCC_CXXFLAGS += -DLINUX -DMUSL -Wno-stringop-truncation -Wno-stringop-overflow -D_REENTRANT -D_FILE_OFFSET_BITS=64
+    PPC_GCC_CXXFLAGS += -DLINUX -DOMR_MUSL_CLIB -Wno-stringop-truncation -Wno-stringop-overflow -D_REENTRANT -D_FILE_OFFSET_BITS=64
   endif
 </#if>
 

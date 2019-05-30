@@ -49,11 +49,11 @@
 #if defined(LINUX) && !defined(J9ZTPF)
 #include <linux/rtc.h>
 #include <sys/syscall.h>
-#if defined(MUSL)
+#if defined(OMR_MUSL_CLIB)
 #include <signal.h>
 #else
 #include <sys/signal.h>
-#endif /* defined(MUSL) */
+#endif /* defined(OMR_MUSL_CLIB) */
 #elif defined(J9ZTPF)
 #include <signal.h>
 #endif /* defined(LINUX) && !defined(J9ZTPF) */

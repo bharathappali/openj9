@@ -384,7 +384,7 @@ endif
   UMA_DLL_LINK_POSTFLAGS += $(UMA_LINK_STATIC_LIBRARIES)
   UMA_DLL_LINK_POSTFLAGS += -Xlinker --end-group
   UMA_DLL_LINK_POSTFLAGS += $(UMA_LINK_SHARED_LIBRARIES)
-
+  UMA_DLL_LINK_POSTFLAGS += -lunwind -lexecinfo
   ifdef j9vm_uma_gnuDebugSymbols
     UMA_DLL_LINK_POSTFLAGS += -g
   endif

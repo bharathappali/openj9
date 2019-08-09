@@ -26,7 +26,11 @@
 
 	<description>Compile Java Test Projects</description>
 
-	<taskdef resource="net/sf/antcontrib/antlib.xml" />
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+		<classpath>
+			<pathelement location="/usr/share/java/apache-ant/lib/ant-contrib-1.0.jar"/>
+		</classpath>
+	</taskdef>
 
 	<property name="ascii.workspace.dir" value="${TEST_ROOT}" />
 	<property name="ascii.test.dir" value="${BUILD_ROOT}" />

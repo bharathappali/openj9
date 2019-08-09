@@ -57,7 +57,7 @@
 		<echo>===executable:                   ${compiler.javac}</echo>
 		<echo>===debug:                        on</echo>
 		<echo>===destdir:                      ${DEST}</echo>
-		<javac srcdir="${src}" destdir="${build}" debug="true" fork="true" executable="${compiler.javac}" includeAntRuntime="false" encoding="ISO-8859-1">
+		<javac srcdir="${src}" destdir="${build}" debug="true" fork="true" executable="${compiler.javac}" includeAntRuntime="false" encoding="ISO-8859-1" verbose="yes">
 			<src path="${src}"/>
 			<include name="**/indyn/BootstrapMethods.java" />
 			<include name="**/indyn/ComplexIndyGenerator.java" />

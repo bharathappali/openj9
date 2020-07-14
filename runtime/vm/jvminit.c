@@ -1819,6 +1819,9 @@ IDATA VMInitStages(J9JavaVM *vm, IDATA stage, void* reserved) {
 			if (FIND_AND_CONSUME_ARG(EXACT_MATCH,VMOPT_TUNE_VIRTUALIZED, NULL) >= 0) {
 				vm->runtimeFlags |= J9_RUNTIME_TUNE_VIRTUALIZED;
 			}
+            if (1 == j9hypervisor_microvm_present()) {
+                vm->runtimeFlags |= J9_RUNTIME_TUNE_VIRTUALIZED;
+            }
 
 			argIndex = FIND_ARG_IN_VMARGS(EXACT_MATCH, VMOPT_XXNODISCLAIMVIRTUALMEMORY, NULL);
 			argIndex2 = FIND_ARG_IN_VMARGS(EXACT_MATCH, VMOPT_XXDISCLAIMVIRTUALMEMORY, NULL);

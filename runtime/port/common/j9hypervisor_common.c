@@ -127,6 +127,7 @@ j9hypervisor_startup(struct J9PortLibrary *portLibrary)
 	PHD_vendorPrivateData = NULL;
 	PHD_vendorStatus = J9HYPERVISOR_NOT_INITIALIZED;
 	PHD_vendorErrMsg = NULL;
+    PHD_isMicroVM = J9MICROVM_NOT_PRESENT;
 
 	/* Initialize the hypervisor monitor. Needed for synchronization
 	 * between multiple threads trying to call into the vendor specific
@@ -141,6 +142,11 @@ j9hypervisor_startup(struct J9PortLibrary *portLibrary)
 	detect_hypervisor(portLibrary);
 
 	hypervisorStatus = j9hypervisor_hypervisor_present(portLibrary);
+    
+    /* 
+     * TODO : based on result of `hypervisorStatus` check the omrsysinfo_is_running_in_container
+     * If its running inside the container check for `env` and `signature` 
+     */
 
 	/*
 	 * Fall-back mechanism for Hypervisor detection.
@@ -202,6 +208,21 @@ intptr_t
 j9hypervisor_hypervisor_present(struct J9PortLibrary *portLibrary)
 {
 	return PHD_isVirtual;
+}
+
+/**
+ * Return whether the application is running in a microVM or not
+ *
+ * @param [in] J9PortLibrary portLibrary the Port Library.
+ *
+ * @return J9MICROVM_PRESENT if running in a microVM
+ *         J9MICROVM_NOT_PRESENT if not running in a microVM
+ *         J9MICROVM_DETECTION_ERROR on failure
+ */
+intptr_t
+j9hypervisor_microvm_present(struct J9PortLibrary *portLibrary)
+{
+    return PHD_isMicroVM;
 }
 
 /**
